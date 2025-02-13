@@ -23,8 +23,9 @@ fetch-submodules:
     git submodule foreach 'git fetch --all --prune --jobs=16'
 
 # `git push` in each submodule.
-push-submodules:
+push:
     git submodule foreach 'git push origin HEAD'
+    git push
 
 # clean (maven and git)
 @clean: _clean-git _clean-maven _clean-m2
