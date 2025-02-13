@@ -1,0 +1,9 @@
+[submodule "Discord-Core-Bot-Apple"]
+	path = Discord-Core-Bot-Apple
+	url = ../Discord-Core-Bot-Apple.git
+[submodule "Factorio-FBSR"]
+	path = Factorio-FBSR
+	url = ../Factorio-FBSR.git
+[submodule "Java-Factorio-Data-Wrapper"]
+	path = Java-Factorio-Data-Wrapper
+	url = ../Java-Factorio-Data-Wrapper.git
