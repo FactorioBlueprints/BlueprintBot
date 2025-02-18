@@ -27,6 +27,9 @@ push:
     git submodule foreach 'git push origin HEAD'
     git push
 
+open-submodule-tabs:
+    git submodule foreach 'open -a iTerm .'
+
 # clean (maven and git)
 @clean: _clean-git _clean-maven _clean-m2
 
