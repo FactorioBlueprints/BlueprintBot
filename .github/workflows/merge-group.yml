@@ -597,7 +597,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: true
-      - uses: reviewdog/action-shellcheck@v1.29.0
+      - uses: reviewdog/action-shellcheck@v1.30.0
         with:
           reporter: github-pr-check
           fail_on_error: true
