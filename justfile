@@ -1,4 +1,3 @@
-set shell := ["bash", "-O", "globstar", "-c"]
 set dotenv-filename := ".envrc"
 
 group_id_with_slashes := "com/demod"
@@ -6,10 +5,10 @@ group_id_with_slashes := "com/demod"
 import ".just/console.just"
 import ".just/maven.just"
 import ".just/git.just"
-import ".just/git-rebase.just"
 import ".just/git-test.just"
+import ".just/fbsr.just"
 
-# `just -l -u`
+# `just --list--unsorted`
 default:
     @just --list --unsorted
 
@@ -33,4 +32,13 @@ open-submodule-tabs:
 # clean (maven and git)
 @clean: _clean-git _clean-maven _clean-m2
 
+markdownlint:
+    markdownlint --config .markdownlint.jsonc  --fix .
+
+# Run all formatting tools for pre-commit
+precommit: mvn
+    uv tool run pre-commit run
+
+# Override this with a command called `woof` which notifies you in whatever ways you prefer.
+# My `woof` command uses `echo`, `say`, and sends a Pushover notification.
 echo_command := env('ECHO_COMMAND', "echo")

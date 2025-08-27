@@ -1,11 +1,11 @@
-default_mvn      := env('MVN_BINARY',   "mvnd")
+default_mvn      := env('MVN_BINARY',   "mvn")
 default_target   := env('MVN_TARGET',   "verify")
 default_flags    := env('MVN_FLAGS',    "--threads 2C")
 skip_tests_flags := default_flags + " -DskipTests"
 
-default_verify_profiles := env('MVN_VERIFY_PROFILES', "maven-enforcer-plugin,maven-dependency-plugin,maven-javadoc-plugin")
-default_checkstyle_profiles := env('MVN_CHECKSTYLE_PROFILES', "checkstyle-semantics,checkstyle-formatting,checkstyle-semantics-strict,checkstyle-formatting-strict")
-default_spotless_profiles := env('MVN_SPOTLESS_PROFILES', "spotless-apply,spotless-formats,spotless-java-sort-imports,spotless-java-unused-imports,spotless-java-cleanthat,spotless-sql,spotless-pom,spotless-markdown,spotless-json,spotless-yaml")
+default_verify_profiles := env('MVN_VERIFY_PROFILES', "spotless-preserve-cache,errorprone-strict,maven-enforcer-plugin,maven-dependency-plugin,maven-javadoc-plugin")
+default_checkstyle_profiles := env('MVN_CHECKSTYLE_PROFILES', "checkstyle-semantics,checkstyle-semantics-strict")
+default_spotless_profiles := env('MVN_SPOTLESS_PROFILES', "spotless-apply,spotless-formats,spotless-java,spotless-prettier-java-sort-imports,spotless-java-cleanthat,spotless-sql,spotless-pom,spotless-markdown,spotless-json,spotless-yaml")
 default_profiles := env('MVN_PROFILES', "--activate-profiles " + default_verify_profiles + "," + default_checkstyle_profiles + "," + default_spotless_profiles)
 
 # Run `mvn` with configurable target, profiles, and flags
@@ -13,15 +13,9 @@ mvn MVN=default_mvn TARGET=default_target PROFILES=default_profiles *FLAGS=defau
     #!/usr/bin/env bash
     set -uo pipefail
 
-    COMMIT_MESSAGE=$(git log --format=%B -n 1 HEAD)
-    SKIPPABLE_WORDS=("skip" "pass" "stop" "fail")
-
-    for word in "${SKIPPABLE_WORDS[@]}"; do
-        if [[ $COMMIT_MESSAGE == *\[${word}\]* ]]; then
-            echo "Skipping due to [{{ANSI_YELLOW}}${word}{{ANSI_DEFAULT}}] in commit: '${COMMIT_MESSAGE}'"
-            exit 0
-        fi
-    done
+    if command -v should-skip-commit >/dev/null 2>&1 && should-skip-commit HEAD; then
+        exit 0
+    fi
 
     # Set colors based on whether values match defaults
     if [ "{{MVN}}" = "{{default_mvn}}" ]; then MVN_COLOR="{{ANSI_GRAY}}"; else MVN_COLOR="{{ANSI_MAGENTA}}"; fi
@@ -37,6 +31,7 @@ mvn MVN=default_mvn TARGET=default_target PROFILES=default_profiles *FLAGS=defau
     fi
 
     DIRECTORY=$(basename $(pwd))
+    COMMIT_MESSAGE=$(git log --format=%B -n 1 HEAD)
 
     MESSAGE="Failed in directory ${DIRECTORY} on commit: '${COMMIT_MESSAGE}' with exit code ${EXIT_CODE}"
     {{echo_command}} "$MESSAGE"
@@ -50,59 +45,69 @@ _clean-m2:
     exit 0
 
 # `mvn clean`
-@_clean-maven MVN=default_mvn *FLAGS=default_flags: && (mvn MVN "clean" "" FLAGS)
-    just _run "git clean --quiet --force -dx release.properties **/pom.xml.releaseBackup **/target"
+@_clean-maven MVN=default_mvn *FLAGS=default_flags: && (mvn MVN "clean" "--activate-profiles spotless-preserve-cache" FLAGS)
+    just _run "git clean --quiet --force -dx release.properties **/pom.xml.releaseBackup"
 
 # `mvn verify` without tests
-compile MVN=default_mvn: (mvn MVN "verify" "" skip_tests_flags) && _check-local-modifications
+compile MVN=default_mvn: (mvn MVN "verify" "" skip_tests_flags)
 
 # `mvn verify` with tests
-test MVN=default_mvn: (mvn MVN "verify" "" default_flags) && _check-local-modifications
+test MVN=default_mvn *FLAGS="": (mvn MVN "verify" "" (default_flags + " " + FLAGS))
 
 # `mvn install`
-install MVN=default_mvn: (mvn MVN "install" "" skip_tests_flags) && _check-local-modifications
+install MVN=default_mvn: (mvn MVN "install" "" skip_tests_flags)
 
 # `mvn` with enforcer plugin
-enforcer MVN=default_mvn: (mvn MVN "verify" "--activate-profiles maven-enforcer-plugin" skip_tests_flags) && _check-local-modifications
+enforcer MVN=default_mvn: (mvn MVN "verify" "--activate-profiles maven-enforcer-plugin" skip_tests_flags)
 
 # `mvn` with dependency plugin
-dependency MVN=default_mvn: (mvn MVN "verify" "--activate-profiles maven-dependency-plugin" skip_tests_flags) && _check-local-modifications
+dependency MVN=default_mvn: (mvn MVN "verify" "--activate-profiles maven-dependency-plugin" skip_tests_flags)
 
 # `mvn` with javadoc plugin
-javadoc MVN=default_mvn: (mvn MVN "verify" "--activate-profiles maven-javadoc-plugin" skip_tests_flags) && _check-local-modifications
+javadoc MVN=default_mvn: (mvn MVN "verify" "--activate-profiles maven-javadoc-plugin" skip_tests_flags)
+
+# `mvn` with jacoco plugin for code coverage
+coverage MVN=default_mvn: (mvn MVN "verify" "--activate-profiles jacoco-maven-plugin" default_flags)
 
 # `mvn` with errorprone
-errorprone MVN=default_mvn: (mvn MVN "verify" "--activate-profiles errorprone" skip_tests_flags) && _check-local-modifications
+errorprone MVN=default_mvn: (mvn MVN "verify" "--activate-profiles errorprone" skip_tests_flags)
 
-# checksyle with semantics profile
-checkstyle-semantics MVN="mvn": (mvn MVN "checkstyle:check" "--activate-profiles checkstyle-semantics" default_flags) && _check-local-modifications
+# `mvn` with errorprone-strict
+errorprone-strict MVN=default_mvn: (mvn MVN "verify" "--activate-profiles errorprone-strict" skip_tests_flags)
 
-# checksyle with formatting profile
-checkstyle-formatting MVN="mvn": (mvn MVN "checkstyle:check" "--activate-profiles checkstyle-formatting" default_flags) && _check-local-modifications
+# `mvn` with errorprone-patch to generate auto-fixes
+errorprone-patch MVN=default_mvn: (mvn MVN "verify" "--activate-profiles errorprone-patch" skip_tests_flags)
 
-# checksyle with semantics-strict profile
-checkstyle-semantics-strict MVN="mvn": (mvn MVN "checkstyle:check" "--activate-profiles checkstyle-semantics-strict" default_flags) && _check-local-modifications
+# `mvn` with spotbugs
+spotbugs MVN=default_mvn: (mvn MVN "verify" "--activate-profiles spotbugs-maven-plugin" skip_tests_flags)
 
-# checksyle with formatting-strict profile
-checkstyle-formatting-strict MVN="mvn": (mvn MVN "checkstyle:check" "--activate-profiles checkstyle-formatting-strict" default_flags) && _check-local-modifications
+# `mvn checkstyle:check` with the given profile
+checkstyle-profile PROFILE FAIL_ON_VIOLATION="true" MVN="mvn": (mvn MVN "checkstyle:check" ("--activate-profiles " + PROFILE) (default_flags + " -Dcheckstyle.failOnViolation=" + FAIL_ON_VIOLATION))
 
-# checksyle with all profiles
-checkstyle: checkstyle-semantics checkstyle-formatting checkstyle-semantics-strict checkstyle-formatting-strict
+# Run checkstyle with all profiles
+checkstyle FAIL_ON_VIOLATION="true" MVN="mvn": \
+    (checkstyle-profile "checkstyle-semantics" FAIL_ON_VIOLATION MVN) \
+    (checkstyle-profile "checkstyle-formatting" FAIL_ON_VIOLATION MVN) \
+    (checkstyle-profile "checkstyle-semantics-strict" FAIL_ON_VIOLATION MVN) \
+    (checkstyle-profile "checkstyle-formatting-strict" FAIL_ON_VIOLATION MVN)
 
 # spotless
-spotless NAME MVN=default_mvn: _check-local-modifications clean (mvn MVN "spotless:apply" ("--activate-profiles spotless-apply,spotless-" + NAME) default_flags) && _check-local-modifications
+spotless NAME MVN=default_mvn: (mvn MVN "spotless:apply" ("--activate-profiles spotless-apply,spotless-" + NAME) default_flags)
 
 # spotless-all
-spotless-all MVN=default_mvn: _check-local-modifications clean (mvn MVN "spotless:apply" "--activate-profiles spotless-apply,spotless-formats,spotless-java-sort-imports,spotless-java-unused-imports,spotless-java-cleanthat,spotless-sql,spotless-pom,spotless-markdown,spotless-json,spotless-yaml" default_flags) && _check-local-modifications
+spotless-all MVN=default_mvn: (mvn MVN "spotless:apply" ("--activate-profiles " + default_spotless_profiles) default_flags)
 
 # `mvn` with reproducible build check
-reproducible MVN=default_mvn: (mvn MVN "verify artifact:check-buildplan" "" skip_tests_flags) && _check-local-modifications
+reproducible MVN=default_mvn: (mvn MVN "verify artifact:check-buildplan" "" skip_tests_flags)
 
-# `mvn` rewrite
-rewrite-dry-run MVN=default_mvn: _check-local-modifications clean (mvn MVN "install org.openrewrite.maven:rewrite-maven-plugin:dryRun" "--activate-profiles rewrite-maven-plugin,rewrite-maven-plugin-dryRun" skip_tests_flags) && _check-local-modifications
+# `mvn` rewrite dry run
+rewrite-dry-run MVN=default_mvn: (mvn MVN "install org.openrewrite.maven:rewrite-maven-plugin:dryRun" "--activate-profiles rewrite-maven-plugin,rewrite-maven-plugin-dryRun" skip_tests_flags)
+
+# `mvn` rewrite run
+rewrite-run MVN=default_mvn: clean (mvn MVN "install org.openrewrite.maven:rewrite-maven-plugin:run" "--activate-profiles rewrite-maven-plugin" skip_tests_flags)
 
 # `mvn` with rewrite-maven-plugin for single recipe
-rewrite RECIPE MVN=default_mvn: _check-local-modifications clean (mvn MVN "install org.openrewrite.maven:rewrite-maven-plugin:run" ("--activate-profiles rewrite-maven-plugin -Drewrite.activeRecipes=" + RECIPE) skip_tests_flags) && _check-local-modifications
+rewrite RECIPE MVN=default_mvn: (mvn MVN "install org.openrewrite.maven:rewrite-maven-plugin:run" ("--activate-profiles rewrite-maven-plugin -Drewrite.activeRecipes=" + RECIPE) skip_tests_flags)
 
 # display available updates (dependencies, plugins, properties)
 @display-updates:
@@ -129,6 +134,8 @@ release: clean _check-local-modifications && _clean-git _check-local-modificatio
     #!/usr/bin/env bash
     set -Eeuo pipefail
 
+    just _run "git checkout {{ANSI_BRIGHT_RED}}{{ANSI_BOLD}}{{upstream_remote}}/{{upstream_branch}}{{ANSI_NORMAL}}"
+
     CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
 
     if [[ $CURRENT_VERSION =~ ([0-9]+)\.([0-9]+)\.([0-9]+)-SNAPSHOT ]]; then
@@ -145,6 +152,7 @@ release: clean _check-local-modifications && _clean-git _check-local-modificatio
     read -p "Enter next version (default: {{ANSI_YELLOW}}$NEXT_VERSION{{ANSI_DEFAULT}}): " INPUT_VERSION
     NEXT_VERSION=${INPUT_VERSION:-$NEXT_VERSION}
 
-    just _run "git checkout {{ANSI_BRIGHT_RED}}{{ANSI_BOLD}}{{upstream_remote}}/{{upstream_branch}}{{ANSI_NORMAL}}"
-
     just _run "mvn {{ANSI_MAGENTA}}--batch-mode{{ANSI_DEFAULT}} clean release:clean release:prepare -DdevelopmentVersion={{ANSI_YELLOW}}$NEXT_VERSION{{ANSI_DEFAULT}}"
+
+# `mvn deploy`
+deploy MVN="mvn": (mvn MVN "deploy" "--activate-profiles maven-central-deploy,deploy,maven-javadoc-plugin" "")
