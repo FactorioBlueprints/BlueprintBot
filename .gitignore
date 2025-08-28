@@ -1,0 +1,61 @@
+# Build directories
+target/
+build/
+assets/
+profiles/
+test/
+
+# Configuration files
+config.json
+*.history
+
+# IDE files
+*.iml
+
+# FBSR specific
+fbsr-cli-help.md
+fbsrcli.history
+
+# Java-Factorio-Data-Wrapper output
+Java-Factorio-Data-Wrapper/FactorioDataWrapper/output/
+
+# Discord Core Bot Apple build
+Discord-Core-Bot-Apple/DiscordCoreBotApple/target/
+
+# Factorio-FBSR builds and generated files
+Factorio-FBSR/FactorioBlueprintStringRenderer/build/
+Factorio-FBSR/FactorioBlueprintStringRenderer/target/
+Factorio-FBSR/build/
+Factorio-FBSR/target/
+Factorio-FBSR/config.json
+Factorio-FBSR/config.json.old
+Factorio-FBSR/profiles/
+Factorio-FBSR/*.history
+
+# Compiled class files
+*.class
+
+# Package Files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
