@@ -15,7 +15,7 @@ jobs:
   maven-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
 
@@ -28,7 +28,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - run: mvn verify
 
@@ -39,7 +39,7 @@ jobs:
   maven-errorprone:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
 
@@ -52,7 +52,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: Add Error Prone problem matcher
         run: echo "::add-matcher::.github/errorprone.json"
@@ -66,7 +66,7 @@ jobs:
   maven-enforcer:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
 
@@ -79,7 +79,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: Run maven-enforcer-plugin
         run: mvn verify --activate-profiles maven-enforcer-plugin -DskipTests
@@ -91,7 +91,7 @@ jobs:
   maven-dependency:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
 
@@ -104,7 +104,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: Run maven-dependency-plugin
         run: mvn verify --activate-profiles maven-dependency-plugin -DskipTests
@@ -116,7 +116,7 @@ jobs:
   maven-javadoc:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
 
@@ -129,7 +129,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: Run maven-javadoc-plugin
         run: mvn verify --activate-profiles maven-javadoc-plugin -DskipTests
@@ -142,7 +142,7 @@ jobs:
     name: checkstyle xml (semantics)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
           ref: ${{ github.event.pull_request.head.sha }}
@@ -157,7 +157,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: "Produce Checkstyle XML: Semantics"
         run: mvn checkstyle:check --activate-profiles 'checkstyle-semantics'
@@ -170,7 +170,7 @@ jobs:
     name: checkstyle xml (semantics strict)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
           ref: ${{ github.event.pull_request.head.sha }}
@@ -185,7 +185,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: "Produce Checkstyle XML: Strict Semantics"
         run: mvn checkstyle:check --activate-profiles 'checkstyle-semantics-strict'
@@ -198,7 +198,7 @@ jobs:
     name: checkstyle xml (formatting)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
           ref: ${{ github.event.pull_request.head.sha }}
@@ -213,7 +213,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: "Produce Checkstyle XML: Formatting"
         run: mvn checkstyle:check --activate-profiles 'checkstyle-formatting'
@@ -226,7 +226,7 @@ jobs:
     name: checkstyle xml (formatting strict)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
           ref: ${{ github.event.pull_request.head.sha }}
@@ -241,7 +241,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: "Produce Checkstyle XML: Strict Formatting"
         run: mvn checkstyle:check --activate-profiles 'checkstyle-formatting-strict'
@@ -253,7 +253,7 @@ jobs:
   maven-rewrite:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
 
@@ -267,7 +267,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: Run rewrite-maven-plugin
         run: mvn install org.openrewrite.maven:rewrite-maven-plugin:dryRun --activate-profiles rewrite-maven-plugin,rewrite-maven-plugin-dryRun -DskipTests
@@ -280,7 +280,7 @@ jobs:
   maven-reproducible:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
 
@@ -293,7 +293,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: Run artifact:check-buildplan
         run: mvn verify artifact:check-buildplan -DskipTests
@@ -305,7 +305,7 @@ jobs:
   spotless-formats:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
           ref: ${{ github.event.pull_request.head.sha }}
@@ -320,7 +320,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: "Spotless Check: Formats"
         run: mvn spotless:check --activate-profiles 'spotless-check,spotless-formats'
@@ -332,7 +332,7 @@ jobs:
   spotless-java-sort-imports:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
           ref: ${{ github.event.pull_request.head.sha }}
@@ -347,7 +347,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: "Spotless Check: Java Import Order"
         run: mvn spotless:check --activate-profiles 'spotless-check,spotless-java-sort-imports'
@@ -359,7 +359,7 @@ jobs:
   spotless-java-unused-imports:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
           ref: ${{ github.event.pull_request.head.sha }}
@@ -374,7 +374,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: "Spotless Check: Java Unused Imports"
         run: mvn spotless:check --activate-profiles 'spotless-check,spotless-java-unused-imports'
@@ -386,7 +386,7 @@ jobs:
   spotless-java-cleanthat:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
           ref: ${{ github.event.pull_request.head.sha }}
@@ -401,7 +401,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: "Spotless Check: Java cleanthat"
         run: mvn spotless:check --activate-profiles 'spotless-check,spotless-java-cleanthat'
@@ -413,7 +413,7 @@ jobs:
   spotless-sql:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
           ref: ${{ github.event.pull_request.head.sha }}
@@ -428,7 +428,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: "Spotless Check: Sql"
         run: mvn spotless:check --activate-profiles 'spotless-check,spotless-sql'
@@ -440,7 +440,7 @@ jobs:
   spotless-pom:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
           ref: ${{ github.event.pull_request.head.sha }}
@@ -455,7 +455,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: "Spotless Check: Pom"
         run: mvn spotless:check --activate-profiles 'spotless-check,spotless-pom'
@@ -467,7 +467,7 @@ jobs:
   spotless-markdown:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
           ref: ${{ github.event.pull_request.head.sha }}
@@ -482,7 +482,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: "Spotless Check: Markdown"
         run: mvn spotless:check --activate-profiles 'spotless-check,spotless-markdown'
@@ -494,7 +494,7 @@ jobs:
   spotless-json:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
           ref: ${{ github.event.pull_request.head.sha }}
@@ -509,7 +509,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: "Spotless Check: Json"
         run: mvn spotless:check --activate-profiles 'spotless-check,spotless-json'
@@ -521,7 +521,7 @@ jobs:
   spotless-yaml:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
           ref: ${{ github.event.pull_request.head.sha }}
@@ -536,7 +536,7 @@ jobs:
 
       - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v3
 
       - name: "Spotless Check: Yaml"
         run: mvn spotless:check --activate-profiles 'spotless-check,spotless-yaml'
@@ -548,7 +548,7 @@ jobs:
   reviewdog-markdownlint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
       - uses: reviewdog/action-markdownlint@v0.26.0
@@ -560,7 +560,7 @@ jobs:
   reviewdog-yamllint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
       - uses: reviewdog/action-yamllint@v1.20.0
@@ -572,7 +572,7 @@ jobs:
   reviewdog-languagetool:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
       - uses: reviewdog/action-languagetool@v1.20.2
@@ -582,7 +582,7 @@ jobs:
   reviewdog-actionlint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
       - uses: reviewdog/action-actionlint@v1.64.1
@@ -594,7 +594,7 @@ jobs:
   reviewdog-shellcheck:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
       - uses: reviewdog/action-shellcheck@v1.29.0
