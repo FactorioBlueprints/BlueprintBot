@@ -9,4 +9,4 @@
 	url = ../Java-Factorio-Data-Wrapper.git
 [submodule "Factorio-BPBot-Mods"]
 	path = Factorio-BPBot-Mods
-	url = FactorioBlueprintsGitHub:demodude4u/Factorio-BPBot-Mods.git
+	url = https://github.com/demodude4u/Factorio-BPBot-Mods.git
