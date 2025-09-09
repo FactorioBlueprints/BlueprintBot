@@ -1,12 +1,12 @@
 [submodule "Discord-Core-Bot-Apple"]
 	path = Discord-Core-Bot-Apple
-	url = ../Discord-Core-Bot-Apple.git
+	url = https://github.com/FactorioBlueprints/Discord-Core-Bot-Apple.git
 [submodule "Factorio-FBSR"]
 	path = Factorio-FBSR
-	url = ../Factorio-FBSR.git
+	url = https://github.com/FactorioBlueprints/Factorio-FBSR.git
 [submodule "Java-Factorio-Data-Wrapper"]
 	path = Java-Factorio-Data-Wrapper
-	url = ../Java-Factorio-Data-Wrapper.git
+	url = https://github.com/FactorioBlueprints/Java-Factorio-Data-Wrapper.git
 [submodule "Factorio-BPBot-Mods"]
 	path = Factorio-BPBot-Mods
 	url = https://github.com/demodude4u/Factorio-BPBot-Mods.git
