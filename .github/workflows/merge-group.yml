@@ -9,7 +9,7 @@ concurrency:
     cancel-in-progress: true
 
 env:
-    GROUP_ID: 'com/demod'
+    GROUP_ID: "com/demod"
 
 jobs:
     maven-test:
@@ -33,7 +33,7 @@ jobs:
             - run: mvn verify
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     maven-errorprone:
@@ -60,7 +60,7 @@ jobs:
             - run: mvn verify --activate-profiles errorprone -DskipTests
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     maven-enforcer:
@@ -85,7 +85,7 @@ jobs:
               run: mvn verify --activate-profiles maven-enforcer-plugin -DskipTests
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     maven-dependency:
@@ -110,7 +110,7 @@ jobs:
               run: mvn verify --activate-profiles maven-dependency-plugin -DskipTests
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     maven-javadoc:
@@ -135,7 +135,7 @@ jobs:
               run: mvn verify --activate-profiles maven-javadoc-plugin -DskipTests
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     checkstyle-semantics:
@@ -159,11 +159,11 @@ jobs:
 
             - uses: jdx/mise-action@v3
 
-            - name: 'Produce Checkstyle XML: Semantics'
+            - name: "Produce Checkstyle XML: Semantics"
               run: mvn checkstyle:check --activate-profiles 'checkstyle-semantics'
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     checkstyle-semantics-strict:
@@ -187,11 +187,11 @@ jobs:
 
             - uses: jdx/mise-action@v3
 
-            - name: 'Produce Checkstyle XML: Strict Semantics'
+            - name: "Produce Checkstyle XML: Strict Semantics"
               run: mvn checkstyle:check --activate-profiles 'checkstyle-semantics-strict'
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     checkstyle-formatting:
@@ -215,11 +215,11 @@ jobs:
 
             - uses: jdx/mise-action@v3
 
-            - name: 'Produce Checkstyle XML: Formatting'
+            - name: "Produce Checkstyle XML: Formatting"
               run: mvn checkstyle:check --activate-profiles 'checkstyle-formatting'
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     checkstyle-formatting-strict:
@@ -243,11 +243,11 @@ jobs:
 
             - uses: jdx/mise-action@v3
 
-            - name: 'Produce Checkstyle XML: Strict Formatting'
+            - name: "Produce Checkstyle XML: Strict Formatting"
               run: mvn checkstyle:check --activate-profiles 'checkstyle-formatting-strict'
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     maven-rewrite:
@@ -273,7 +273,7 @@ jobs:
               run: mvn install org.openrewrite.maven:rewrite-maven-plugin:dryRun --activate-profiles rewrite-maven-plugin,rewrite-maven-plugin-dryRun -DskipTests
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     # Check for reproducible builds with artifact:check-buildplan
@@ -299,7 +299,7 @@ jobs:
               run: mvn verify artifact:check-buildplan -DskipTests
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     spotless-formats:
@@ -322,11 +322,11 @@ jobs:
 
             - uses: jdx/mise-action@v3
 
-            - name: 'Spotless Check: Formats'
+            - name: "Spotless Check: Formats"
               run: mvn spotless:check --activate-profiles 'spotless-check,spotless-formats'
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     spotless-java-sort-imports:
@@ -349,11 +349,11 @@ jobs:
 
             - uses: jdx/mise-action@v3
 
-            - name: 'Spotless Check: Java Import Order'
+            - name: "Spotless Check: Java Import Order"
               run: mvn spotless:check --activate-profiles 'spotless-check,spotless-java-sort-imports'
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     spotless-java-unused-imports:
@@ -376,11 +376,11 @@ jobs:
 
             - uses: jdx/mise-action@v3
 
-            - name: 'Spotless Check: Java Unused Imports'
+            - name: "Spotless Check: Java Unused Imports"
               run: mvn spotless:check --activate-profiles 'spotless-check,spotless-java-unused-imports'
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     spotless-java-cleanthat:
@@ -403,11 +403,11 @@ jobs:
 
             - uses: jdx/mise-action@v3
 
-            - name: 'Spotless Check: Java cleanthat'
+            - name: "Spotless Check: Java cleanthat"
               run: mvn spotless:check --activate-profiles 'spotless-check,spotless-java-cleanthat'
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     spotless-sql:
@@ -430,11 +430,11 @@ jobs:
 
             - uses: jdx/mise-action@v3
 
-            - name: 'Spotless Check: Sql'
+            - name: "Spotless Check: Sql"
               run: mvn spotless:check --activate-profiles 'spotless-check,spotless-sql'
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     spotless-pom:
@@ -457,11 +457,11 @@ jobs:
 
             - uses: jdx/mise-action@v3
 
-            - name: 'Spotless Check: Pom'
+            - name: "Spotless Check: Pom"
               run: mvn spotless:check --activate-profiles 'spotless-check,spotless-pom'
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     pre-commit:
@@ -470,7 +470,7 @@ jobs:
             - uses: actions/checkout@v6
             - uses: actions/setup-python@v6
               with:
-                  python-version: '3.x'
+                  python-version: "3.x"
             - uses: jdx/mise-action@v3
             - uses: pre-commit/action@v3.0.1
 

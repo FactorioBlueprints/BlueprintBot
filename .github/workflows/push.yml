@@ -10,7 +10,7 @@ concurrency:
     cancel-in-progress: true
 
 env:
-    GROUP_ID: 'com/demod'
+    GROUP_ID: "com/demod"
 
 jobs:
     maven:
@@ -34,5 +34,5 @@ jobs:
             - run: mvn verify --activate-profiles maven-enforcer-plugin,maven-dependency-plugin,maven-javadoc-plugin,checkstyle-semantics,checkstyle-formatting,checkstyle-semantics-strict,checkstyle-formatting-strict,spotless-check,spotless-formats,spotless-java-sort-imports,spotless-java-unused-imports,spotless-java-cleanthat,spotless-sql,spotless-pom
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}

@@ -4,7 +4,7 @@ fbsr_dir := "Factorio-FBSR/FactorioBlueprintStringRenderer"
 fbsr_config := fbsr_dir / "config.json"
 fbsr_config_template := fbsr_dir / "res/config-template.json"
 
-# Run FBSR CLI with arguments 
+# Run FBSR CLI with arguments
 fbsr *ARGS:
     #!/usr/bin/env bash
     set -euo pipefail
