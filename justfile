@@ -33,7 +33,7 @@ open-submodule-tabs:
 @clean: _clean-git _clean-maven _clean-m2
 
 markdownlint:
-    markdownlint --config .markdownlint.jsonc  --fix .
+    markdownlint-cli2 --fix
 
 # Run all formatting tools for pre-commit
 precommit: mvn
