@@ -1,0 +1,17 @@
+// Configuration for markdownlint-cli2.
+// Rule definitions live in .markdownlint.jsonc and are auto-merged.
+// Docs: https://github.com/DavidAnson/markdownlint-cli2#configuration
+{
+	"globs": ["**/*.md"],
+	// Submodules are separate repositories with their own formatting; do not lint them here.
+	"ignores": [
+		"**/target/**",
+		"**/node_modules/**",
+		".llm/**",
+		".claude/**",
+		"Discord-Core-Bot-Apple/**",
+		"Factorio-BPBot-Mods/**",
+		"Factorio-FBSR/**",
+		"Java-Factorio-Data-Wrapper/**",
+	],
+}
