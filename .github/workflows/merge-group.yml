@@ -1,209 +1,219 @@
 # Jobs that run on merge_group, meaning they must pass before changes land. They also run on pull_request.
 
 on:
-  pull_request:
-  merge_group:
+    pull_request:
+    merge_group:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
 
 env:
-  GROUP_ID: "com/demod"
+    GROUP_ID: 'com/demod'
 
 jobs:
-  maven-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          submodules: true
+    maven-test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+              with:
+                  submodules: true
 
-      - uses: actions/cache@v4
-        with:
-          key: maven-${{ hashFiles('**/pom.xml') }}
-          path: ~/.m2/repository
-          restore-keys: |
-            maven-
+            - uses: actions/cache@v4
+              with:
+                  key: maven-${{ hashFiles('**/pom.xml') }}
+                  path: ~/.m2/repository
+                  restore-keys: |
+                      maven-
 
-      - uses: twosigma/maven-cache-cleaner@v1
+            - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v3
+            - uses: jdx/mise-action@v3
 
-      - run: mvn verify
+            - run: mvn verify
 
-      # Remove any jars we may have created before actions/cache caches .m2
-      - name: "Clean Maven cache"
-        run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
+            # Remove any jars we may have created before actions/cache caches .m2
+            - name: 'Clean Maven cache'
+              run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
-  maven-errorprone:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          submodules: true
+    maven-errorprone:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+              with:
+                  submodules: true
 
-      - uses: actions/cache@v4
-        with:
-          key: maven-${{ hashFiles('**/pom.xml') }}
-          path: ~/.m2/repository
-          restore-keys: |
-            maven-
+            - uses: actions/cache@v4
+              with:
+                  key: maven-${{ hashFiles('**/pom.xml') }}
+                  path: ~/.m2/repository
+                  restore-keys: |
+                      maven-
 
-      - uses: twosigma/maven-cache-cleaner@v1
+            - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v3
+            - uses: jdx/mise-action@v3
 
-      - name: Add Error Prone problem matcher
-        run: echo "::add-matcher::.github/errorprone.json"
+            - name: Add Error Prone problem matcher
+              run: echo "::add-matcher::.github/errorprone.json"
 
-      - run: mvn verify --activate-profiles errorprone -DskipTests
+            - run: mvn verify --activate-profiles errorprone -DskipTests
 
-      # Remove any jars we may have created before actions/cache caches .m2
-      - name: "Clean Maven cache"
-        run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
+            # Remove any jars we may have created before actions/cache caches .m2
+            - name: 'Clean Maven cache'
+              run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
-  maven-enforcer:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          submodules: true
+    maven-enforcer:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+              with:
+                  submodules: true
 
-      - uses: actions/cache@v4
-        with:
-          key: maven-${{ hashFiles('**/pom.xml') }}
-          path: ~/.m2/repository
-          restore-keys: |
-            maven-
+            - uses: actions/cache@v4
+              with:
+                  key: maven-${{ hashFiles('**/pom.xml') }}
+                  path: ~/.m2/repository
+                  restore-keys: |
+                      maven-
 
-      - uses: twosigma/maven-cache-cleaner@v1
+            - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v3
+            - uses: jdx/mise-action@v3
 
-      - name: Run maven-enforcer-plugin
-        run: mvn verify --activate-profiles maven-enforcer-plugin -DskipTests
+            - name: Run maven-enforcer-plugin
+              run: mvn verify --activate-profiles maven-enforcer-plugin -DskipTests
 
-      # Remove any jars we may have created before actions/cache caches .m2
-      - name: "Clean Maven cache"
-        run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
+            # Remove any jars we may have created before actions/cache caches .m2
+            - name: 'Clean Maven cache'
+              run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
-  maven-rewrite:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          submodules: true
+    maven-rewrite:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+              with:
+                  submodules: true
 
-      - uses: actions/cache@v4
-        with:
-          key: maven-rewrite-${{ hashFiles('**/pom.xml') }}
-          path: ~/.m2/repository
-          restore-keys: |
-            maven-rewrite-
-            maven-
+            - uses: actions/cache@v4
+              with:
+                  key: maven-rewrite-${{ hashFiles('**/pom.xml') }}
+                  path: ~/.m2/repository
+                  restore-keys: |
+                      maven-rewrite-
+                      maven-
 
-      - uses: twosigma/maven-cache-cleaner@v1
+            - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v3
+            - uses: jdx/mise-action@v3
 
-      - name: Run rewrite-maven-plugin
-        run: mvn install org.openrewrite.maven:rewrite-maven-plugin:dryRun --activate-profiles rewrite-maven-plugin,rewrite-maven-plugin-dryRun -DskipTests
+            - name: Run rewrite-maven-plugin
+              run: mvn install org.openrewrite.maven:rewrite-maven-plugin:dryRun --activate-profiles rewrite-maven-plugin,rewrite-maven-plugin-dryRun -DskipTests
 
-      # Remove any jars we may have created before actions/cache caches .m2
-      - name: "Clean Maven cache"
-        run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
+            # Remove any jars we may have created before actions/cache caches .m2
+            - name: 'Clean Maven cache'
+              run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
-  # Check for reproducible builds with artifact:check-buildplan
-  maven-reproducible:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          submodules: true
+    # Check for reproducible builds with artifact:check-buildplan
+    maven-reproducible:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+              with:
+                  submodules: true
 
-      - uses: actions/cache@v4
-        with:
-          key: maven-${{ hashFiles('**/pom.xml') }}
-          path: ~/.m2/repository
-          restore-keys: |
-            maven-
+            - uses: actions/cache@v4
+              with:
+                  key: maven-${{ hashFiles('**/pom.xml') }}
+                  path: ~/.m2/repository
+                  restore-keys: |
+                      maven-
 
-      - uses: twosigma/maven-cache-cleaner@v1
+            - uses: twosigma/maven-cache-cleaner@v1
 
-      - uses: jdx/mise-action@v3
+            - uses: jdx/mise-action@v3
 
-      - name: Run artifact:check-buildplan
-        run: mvn verify artifact:check-buildplan -DskipTests
+            - name: Run artifact:check-buildplan
+              run: mvn verify artifact:check-buildplan -DskipTests
 
-      # Remove any jars we may have created before actions/cache caches .m2
-      - name: "Clean Maven cache"
-        run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
+            # Remove any jars we may have created before actions/cache caches .m2
+            - name: 'Clean Maven cache'
+              run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
-  reviewdog-markdownlint:
-    runs-on: ubuntu-latest
-    steps:
-      # Submodule documentation belongs to its own repository and lint configuration.
-      - uses: actions/checkout@v5
-      - uses: reviewdog/action-markdownlint@a223028b797326efe9d3c9b55e24d740480c3352 # v0.31.2
-        with:
-          reporter: github-pr-check
-          fail_on_error: true
-          filter_mode: nofilter
+    pre-commit:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+            - uses: actions/setup-python@v6
+              with:
+                  python-version: '3.x'
+            - uses: jdx/mise-action@v3
+            - uses: pre-commit/action@v3.0.1
 
-  reviewdog-yamllint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          submodules: true
-      - uses: reviewdog/action-yamllint@v1.20.0
-        with:
-          reporter: github-pr-check
-          fail_on_error: true
-          filter_mode: nofilter
+    reviewdog-markdownlint:
+        runs-on: ubuntu-latest
+        steps:
+            # Submodule documentation belongs to its own repository and lint configuration.
+            - uses: actions/checkout@v5
+            - uses: reviewdog/action-markdownlint@a223028b797326efe9d3c9b55e24d740480c3352 # v0.31.2
+              with:
+                  reporter: github-pr-check
+                  fail_on_error: true
+                  filter_mode: nofilter
 
-  reviewdog-languagetool:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          submodules: true
-      - uses: reviewdog/action-languagetool@v1.20.2
-        with:
-          reporter: github-pr-check
+    reviewdog-yamllint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+              with:
+                  submodules: true
+            - uses: reviewdog/action-yamllint@v1.20.0
+              with:
+                  reporter: github-pr-check
+                  fail_on_error: true
+                  filter_mode: nofilter
 
-  reviewdog-actionlint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          submodules: true
-      - uses: reviewdog/action-actionlint@v1.64.1
-        with:
-          reporter: github-pr-check
-          fail_on_error: true
-          filter_mode: nofilter
+    reviewdog-languagetool:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+              with:
+                  submodules: true
+            - uses: reviewdog/action-languagetool@v1.20.2
+              with:
+                  reporter: github-pr-check
 
-  reviewdog-shellcheck:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          submodules: true
-      - uses: reviewdog/action-shellcheck@v1.29.0
-        with:
-          reporter: github-pr-check
-          fail_on_error: true
-          filter_mode: nofilter
+    reviewdog-actionlint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+              with:
+                  submodules: true
+            - uses: reviewdog/action-actionlint@v1.64.1
+              with:
+                  reporter: github-pr-check
+                  fail_on_error: true
+                  filter_mode: nofilter
 
-  just-format:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
-        with:
-          install_args: just pre-commit
-      - run: pre-commit run just-fmt --all-files
+    reviewdog-shellcheck:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+              with:
+                  submodules: true
+            - uses: reviewdog/action-shellcheck@v1.29.0
+              with:
+                  reporter: github-pr-check
+                  fail_on_error: true
+                  filter_mode: nofilter
+
+    just-format:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+              with:
+                  persist-credentials: false
+            - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
+              with:
+                  install_args: just pre-commit
+            - run: pre-commit run just-fmt --all-files
