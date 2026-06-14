@@ -6,9 +6,9 @@ export default {
 		tabWidth: 4,
 		printWidth: 120,
 		semi: true,
-		singleQuote: true,
+		singleQuote: false,
 		bracketSpacing: false,
-		trailingComma: 'all',
-		arrowParens: 'always',
+		trailingComma: "all",
+		arrowParens: "always",
 	},
 };
