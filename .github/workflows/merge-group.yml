@@ -9,7 +9,7 @@ concurrency:
     cancel-in-progress: true
 
 env:
-    GROUP_ID: 'com/demod'
+    GROUP_ID: "com/demod"
 
 jobs:
     maven-test:
@@ -33,7 +33,7 @@ jobs:
             - run: mvn verify
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     maven-errorprone:
@@ -60,7 +60,7 @@ jobs:
             - run: mvn verify --activate-profiles errorprone -DskipTests
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     maven-enforcer:
@@ -85,7 +85,7 @@ jobs:
               run: mvn verify --activate-profiles maven-enforcer-plugin -DskipTests
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     maven-rewrite:
@@ -111,7 +111,7 @@ jobs:
               run: mvn install org.openrewrite.maven:rewrite-maven-plugin:dryRun --activate-profiles rewrite-maven-plugin,rewrite-maven-plugin-dryRun -DskipTests
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     # Check for reproducible builds with artifact:check-buildplan
@@ -137,7 +137,7 @@ jobs:
               run: mvn verify artifact:check-buildplan -DskipTests
 
             # Remove any jars we may have created before actions/cache caches .m2
-            - name: 'Clean Maven cache'
+            - name: "Clean Maven cache"
               run: rm -rf ~/.m2/repository/${{ env.GROUP_ID }}
 
     pre-commit:
@@ -146,7 +146,7 @@ jobs:
             - uses: actions/checkout@v6
             - uses: actions/setup-python@v6
               with:
-                  python-version: '3.x'
+                  python-version: "3.x"
             - uses: jdx/mise-action@v3
             - uses: pre-commit/action@v3.0.1
 
