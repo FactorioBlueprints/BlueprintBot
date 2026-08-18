@@ -20,6 +20,7 @@ fbsr-setup: (fbsr "cfg-factorio" "-find-install")
 fbsr-vanilla: fbsr-setup (fbsr "profile-default-vanilla")
 
 # Build assets for profile (depends on vanilla profile existing)
+[arg("PROFILE", long="profile", help="Profile name")]
 fbsr-build-assets PROFILE="vanilla": fbsr-vanilla
     #!/usr/bin/env bash
     set -euo pipefail
@@ -42,16 +43,20 @@ fbsr-bot-status: (fbsr "bot-status")
 fbsr-bot-kill: (fbsr "bot-kill")
 
 # Render blueprint to test file (bot must be running)
+[arg("BLUEPRINT", long="blueprint", help="Blueprint string or path")]
 fbsr-render BLUEPRINT:
     @echo "Note: Bot service must be running. Use 'just fbsr-bot' to start it."
     @just fbsr bot-render "{{BLUEPRINT}}" -full -t
 
 # Render blueprint to specific file (bot must be running)
+[arg("BLUEPRINT", long="blueprint", help="Blueprint string or path")]
+[arg("OUTPUT", long="output", help="Output path")]
 fbsr-render-file BLUEPRINT OUTPUT:
     @echo "Note: Bot service must be running. Use 'just fbsr-bot' to start it."
     @just fbsr bot-render "{{BLUEPRINT}}" -full -o="{{OUTPUT}}"
 
 # Enable Web API for automation
+[arg("PORT", long="port", help="Server port")]
 fbsr-webapi PORT="8080": fbsr-setup (fbsr "cfg-webapi" "-enable" "-port" PORT)
 
 # Run FBSR with Web API (for automation)
