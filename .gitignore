@@ -1,3 +1,7 @@
+/.envrc
+/.llm/
+/JUSTFILE_BRANCH
+
 # Build directories
 target/
 build/
@@ -15,22 +19,6 @@ config.json
 # FBSR specific
 fbsr-cli-help.md
 fbsrcli.history
-
-# Java-Factorio-Data-Wrapper output
-Java-Factorio-Data-Wrapper/FactorioDataWrapper/output/
-
-# Discord Core Bot Apple build
-Discord-Core-Bot-Apple/DiscordCoreBotApple/target/
-
-# Factorio-FBSR builds and generated files
-Factorio-FBSR/FactorioBlueprintStringRenderer/build/
-Factorio-FBSR/FactorioBlueprintStringRenderer/target/
-Factorio-FBSR/build/
-Factorio-FBSR/target/
-Factorio-FBSR/config.json
-Factorio-FBSR/config.json.old
-Factorio-FBSR/profiles/
-Factorio-FBSR/*.history
 
 # Compiled class files
 *.class
