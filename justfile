@@ -36,8 +36,11 @@ markdownlint:
     markdownlint --config .markdownlint.jsonc  --fix .
 
 # Run all formatting tools for pre-commit
-precommit: mvn
+verify: mvn
     uv tool run pre-commit run
+
+# Deprecated alias for `verify`
+precommit: verify
 
 # Override this with a command called `woof` which notifies you in whatever ways you prefer.
 # My `woof` command uses `echo`, `say`, and sends a Pushover notification.
