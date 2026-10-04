@@ -32,4 +32,16 @@
   // Line length where Prettier will try to wrap
   // Default: 80
   printWidth: 120,
+  // Match the Maven Spotless YAML formatter.
+  overrides: [
+    {
+      files: ["*.yaml", "*.yml"],
+      options: {
+        tabWidth: 2,
+        singleQuote: false,
+        bracketSpacing: true,
+        printWidth: 80,
+      },
+    },
+  ],
 }
