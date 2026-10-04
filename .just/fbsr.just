@@ -4,11 +4,11 @@ fbsr_dir := "Factorio-FBSR/FactorioBlueprintStringRenderer"
 fbsr_config := fbsr_dir / "config.json"
 fbsr_config_template := fbsr_dir / "res/config-template.json"
 
-# Run FBSR CLI with arguments 
+# Run FBSR CLI with arguments
 fbsr *ARGS:
     #!/usr/bin/env bash
     set -euo pipefail
-    mvn --quiet --file {{fbsr_dir}}/pom.xml exec:java -Dexec.args="{{ARGS}}"
+    mvn --quiet --file {{ fbsr_dir }}/pom.xml exec:java -Dexec.args="{{ ARGS }}"
 
 # Show FBSR configuration
 fbsr-config: (fbsr "cfg-show")
@@ -24,7 +24,7 @@ fbsr-build-assets PROFILE="vanilla": fbsr-vanilla
     #!/usr/bin/env bash
     set -euo pipefail
     # Asset building needs more heap space
-    MAVEN_OPTS="-Xmx40G" mvn --quiet --file {{fbsr_dir}}/pom.xml exec:java -Dexec.args="build {{PROFILE}}"
+    MAVEN_OPTS="-Xmx40G" mvn --quiet --file {{ fbsr_dir }}/pom.xml exec:java -Dexec.args="build {{ PROFILE }}"
 
 # Show all profile statuses
 fbsr-status: (fbsr "profile-status" "-a")
@@ -44,12 +44,12 @@ fbsr-bot-kill: (fbsr "bot-kill")
 # Render blueprint to test file (bot must be running)
 fbsr-render BLUEPRINT:
     @echo "Note: Bot service must be running. Use 'just fbsr-bot' to start it."
-    @just fbsr bot-render "{{BLUEPRINT}}" -full -t
+    @just fbsr bot-render "{{ BLUEPRINT }}" -full -t
 
 # Render blueprint to specific file (bot must be running)
 fbsr-render-file BLUEPRINT OUTPUT:
     @echo "Note: Bot service must be running. Use 'just fbsr-bot' to start it."
-    @just fbsr bot-render "{{BLUEPRINT}}" -full -o="{{OUTPUT}}"
+    @just fbsr bot-render "{{ BLUEPRINT }}" -full -o="{{ OUTPUT }}"
 
 # Enable Web API for automation
 fbsr-webapi PORT="8080": fbsr-setup (fbsr "cfg-webapi" "-enable" "-port" PORT)
