@@ -96,7 +96,7 @@ spotbugs MVN=default_mvn: (mvn MVN "verify" "--activate-profiles spotbugs-maven-
 
 # `mvn checkstyle:check` with the given profile
 [arg("MVN", long="mvn", help="Maven binary to use")]
-[arg("PROFILE", long="profile", help="Profile name")]
+[arg("PROFILE", long="profile", help="Checkstyle profile name")]
 [arg("FAIL_ON_VIOLATION", long="warn", value="false", help="Warn without failing")]
 checkstyle-profile PROFILE FAIL_ON_VIOLATION="true" MVN="mvn": (mvn MVN "checkstyle:check" ("--activate-profiles " + PROFILE) (default_flags + " -Dcheckstyle.failOnViolation=" + FAIL_ON_VIOLATION))
 
@@ -107,7 +107,7 @@ checkstyle FAIL_ON_VIOLATION="true" MVN="mvn": (checkstyle-profile "checkstyle-s
 
 # spotless
 [arg("MVN", long="mvn", help="Maven binary to use")]
-[arg("NAME", long="name", help="Spotless formatter name")]
+[arg("NAME", long="name", help="Spotless formatter (pom, json, yaml, markdown, sql, ...)")]
 spotless NAME MVN=default_mvn: (mvn MVN "spotless:apply" ("--activate-profiles spotless-apply,spotless-" + NAME) default_flags)
 
 # spotless-all
@@ -148,7 +148,7 @@ rewrite RECIPE MVN=default_mvn: (mvn MVN "install org.openrewrite.maven:rewrite-
     just _run "mvn {{ ANSI_MAGENTA }}--threads 1{{ ANSI_DEFAULT }} buildplan:list-phase"
 
 # `mvn wrapper:wrapper`
-[arg("VERSION", long="version", help="Version to use")]
+[arg("VERSION", long="version", help="Maven version for the wrapper")]
 @wrapper VERSION:
     just _run "mvn {{ ANSI_MAGENTA }}--threads 1{{ ANSI_DEFAULT }} wrapper:wrapper -Dmaven={{ ANSI_YELLOW }}{{ VERSION }}{{ ANSI_DEFAULT }}"
 
