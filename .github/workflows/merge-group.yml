@@ -182,7 +182,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: reviewdog/action-markdownlint@a223028b797326efe9d3c9b55e24d740480c3352 # v0.31.2
+      - uses: reviewdog/action-markdownlint@34762a7b2dddebf3eb82f7e3a63b9d0242d0a42a # v0.31.4
         with:
           reporter: github-pr-check
           fail_on_error: true
@@ -198,7 +198,7 @@ jobs:
         with:
           submodules: true
           persist-credentials: false
-      - uses: reviewdog/action-yamllint@290d92c84b22627946efc7fd6f038ade2d2beede # v1.25.0
+      - uses: reviewdog/action-yamllint@5dd4640db975e4cac6f4e775a401695bafc28068 # v1.25.1
         with:
           reporter: github-pr-check
           fail_on_error: true
@@ -228,7 +228,7 @@ jobs:
         with:
           submodules: true
           persist-credentials: false
-      - uses: reviewdog/action-actionlint@2085657ab2c7f48c58edcc767fba576f63bea76b # v1.77.0
+      - uses: reviewdog/action-actionlint@a8ac3eea598697a830f7d8e701fc9fcbfde88974 # v1.80.0
         with:
           reporter: github-pr-check
           fail_on_error: true
