@@ -3,11 +3,10 @@
 // Docs: https://github.com/DavidAnson/markdownlint-cli2#configuration
 {
 	"globs": ["**/*.md"],
+	"gitignore": true,
 	// Submodules are separate repositories with their own formatting; do not lint them here.
 	"ignores": [
-		"**/target/**",
 		"**/node_modules/**",
-		".llm/**",
 		".claude/**",
 		"Discord-Core-Bot-Apple/**",
 		"Factorio-BPBot-Mods/**",
