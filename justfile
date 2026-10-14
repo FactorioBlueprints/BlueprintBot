@@ -1,5 +1,3 @@
-set dotenv-filename := ".envrc"
-
 group_id_with_slashes := "com/demod"
 
 import ".just/console.just"
